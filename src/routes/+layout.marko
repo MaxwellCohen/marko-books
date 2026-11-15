@@ -1,0 +1,52 @@
+import "../styles.css"
+import { parseSearchParams } from "@/lib/url-state"
+
+static const DESCRIPTION =
+  "Browse two million Goodreads books with Marko Run, streaming search, and URL-driven filters.";
+
+// Applies the stored theme before first paint (no flash).
+static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||((t==="system"||!t)&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
+
+<const/searchParams=parseSearchParams($global.search ?? {})>
+<const/title=(($global.data as { pageTitle?: string } | undefined)?.pageTitle ?? "Marko Books")>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title}</title>
+    <meta name="description" content=DESCRIPTION>
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta property="og:description" content=DESCRIPTION>
+    <meta property="og:site_name" content="Marko Books">
+    <meta property="og:title" content="Marko Books">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+    <html-script>$!{THEME_SCRIPT}</html-script>
+  </head>
+  <body class="bg-surface text-black antialiased dark:bg-surface-dark dark:text-white">
+    <div class="group flex min-h-dvh">
+      <aside class="border-divider bg-surface dark:border-divider-dark dark:bg-surface-dark sticky top-0 hidden h-dvh w-72 shrink-0 flex-col border-r px-5 py-5 md:flex">
+        <book-sidebar idPrefix="desktop" searchParams=searchParams/>
+      </aside>
+
+      <div class="flex min-w-0 flex-1 flex-col">
+        <header class="border-divider bg-surface/80 dark:border-divider-dark dark:bg-surface-dark/80 sticky top-0 z-20 flex items-center gap-2 border-b px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:gap-3 sm:px-6">
+          <mobile-sidebar>
+            <book-sidebar idPrefix="mobile" mobile searchParams=searchParams/>
+          </mobile-sidebar>
+          <book-search searchParams=searchParams/>
+        </header>
+
+        <main class="flex min-w-0 flex-1 flex-col">
+          <${input.content}/>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

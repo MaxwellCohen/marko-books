@@ -1,0 +1,36 @@
+import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from "@/features/book/book-constants"
+import { thumbhashUrl } from "@/features/book/thumbhash"
+import { cn } from "@/lib/utils"
+
+export interface Input {
+  title: string;
+  src: string | null;
+  thumbhash: string | null;
+  sizes: string;
+  class?: string;
+  priority?: boolean;
+}
+
+<const/placeholder=thumbhashUrl(input.thumbhash)>
+
+<div class=cn("bg-card dark:bg-card-dark relative aspect-[2/3] w-full overflow-hidden rounded-md", input.class)>
+  <img
+    alt=input.title
+    class="absolute inset-0 h-full w-full object-cover"
+    decoding="async"
+    fetchpriority=(input.priority ? "high" : undefined)
+    loading=(input.priority ? "eager" : "lazy")
+    sizes=input.sizes
+    src=getLargeBookImageUrl(input.src ?? EMPTY_IMAGE_URL)
+    style=(placeholder ? `background-image: url(${placeholder}); background-size: cover;` : undefined)
+    onerror="this.hidden=true;this.nextElementSibling.hidden=false"
+  />
+  <div
+    aria-label=`Cover unavailable for ${input.title}`
+    class="text-muted absolute inset-0 flex items-center justify-center p-3 text-center text-sm"
+    hidden
+    role="img"
+  >
+    Cover unavailable
+  </div>
+</div>

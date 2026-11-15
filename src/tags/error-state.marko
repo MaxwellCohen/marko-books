@@ -1,0 +1,35 @@
+export interface Input {
+  title?: string;
+  body?: string;
+  compact?: boolean;
+  content?: Marko.Body;
+}
+
+<const/title=input.title ?? "Something went wrong">
+
+<if=input.compact>
+  <div class="flex flex-col items-center gap-2 px-4 py-6 text-center">
+    <icon name="alert-triangle" class="text-danger size-4"/>
+    <p class="text-muted text-xs">${title}</p>
+    <if=input.body>
+      <p class="text-muted text-xs leading-5">${input.body}</p>
+    </if>
+    <if=input.content>
+      <${input.content}/>
+    </if>
+  </div>
+</if>
+<else>
+  <div class="grid flex-1 place-items-center px-6 py-20 text-center">
+    <div class="flex max-w-sm flex-col items-center gap-3">
+      <icon name="alert-triangle" class="text-danger size-6"/>
+      <p class="text-sm font-medium text-black dark:text-white">${title}</p>
+      <if=input.body>
+        <p class="text-muted text-sm leading-6">${input.body}</p>
+      </if>
+      <if=input.content>
+        <${input.content}/>
+      </if>
+    </div>
+  </div>
+</else>

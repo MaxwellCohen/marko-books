@@ -1,0 +1,21 @@
+import { API_DELAY_VALUES, formatApiDelay, getApiDelayMs, type SearchParams } from "@/lib/url-state"
+
+export interface Input {
+  idPrefix: string;
+  searchParams: SearchParams;
+}
+
+<const/current=getApiDelayMs(input.searchParams)>
+
+<range-field
+  id=`${input.idPrefix}-api-delay`
+  label="API delay"
+  values=API_DELAY_VALUES
+  value=current
+  readouts=API_DELAY_VALUES.map(formatApiDelay)
+  initialReadout=formatApiDelay(current)
+  hint=["Off", "3s"]
+  param="delay"
+  clearValue=0
+  searchParams=input.searchParams
+/>

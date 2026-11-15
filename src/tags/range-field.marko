@@ -1,0 +1,72 @@
+import { updateParams } from "@/lib/navigate"
+import { labelClass } from "@/lib/ui"
+import type { SearchParams } from "@/lib/url-state"
+
+static function closestIndex(values: readonly number[], value: number) {
+  const exact = values.indexOf(value);
+  if (exact >= 0) return exact;
+  let closest = 0;
+  let distance = Number.POSITIVE_INFINITY;
+  values.forEach((candidate, i) => {
+    const next = Math.abs(candidate - value);
+    if (next < distance) {
+      closest = i;
+      distance = next;
+    }
+  });
+  return closest;
+}
+
+export interface Input {
+  id: string;
+  label: string;
+  /** Selectable values, in slider order. */
+  values: readonly number[];
+  /** Value currently applied via the URL. */
+  value: number;
+  /** Display text for each entry of `values` (shown live while dragging). */
+  readouts: readonly string[];
+  /** Display text for the applied URL value (may sit between two steps). */
+  initialReadout: string;
+  hint: [string, string];
+  /** Query param this slider writes to. */
+  param: keyof SearchParams;
+  /** Selecting this value removes the param. */
+  clearValue: number;
+  searchParams: SearchParams;
+}
+
+<let/index=closestIndex(input.values, input.value)>
+<let/touched=false>
+
+<div class="flex flex-col gap-2">
+  <div class="flex items-baseline justify-between gap-2">
+    <label class=labelClass for=input.id>${input.label}</label>
+    <span class="text-sm font-medium text-black tabular-nums dark:text-white">
+      ${touched ? input.readouts[index] : input.initialReadout}
+    </span>
+  </div>
+  <input
+    class="focus-visible:ring-accent/30 cursor-pointer rounded-full focus-visible:ring-2 focus-visible:outline-none"
+    id=input.id
+    max=(input.values.length - 1)
+    min=0
+    step=1
+    type="range"
+    value=index
+    onInput(_, element) {
+      index = Number(element.value);
+      touched = true;
+    }
+    onChange(_, element) {
+      const next = input.values[Number(element.value)] ?? input.value;
+      updateParams(input.searchParams, {
+        [input.param]: next === input.clearValue ? undefined : String(next),
+      });
+    }
+  />
+  <div class="text-muted flex justify-between text-[11px] tabular-nums">
+    <span>${input.hint[0]}</span>
+    <span>${input.hint[1]}</span>
+  </div>
+</div>

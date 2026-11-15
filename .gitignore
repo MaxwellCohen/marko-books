@@ -1,0 +1,14 @@
+.DS_Store
+.env*
+!.env.example
+.vscode/settings.json
+*.log
+dist
+node_modules
+.marko-run
+Thumbs.db
+*.tsbuildinfo
+.vercel
+.netlify
+.wrangler
+.dev.vars

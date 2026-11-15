@@ -1,0 +1,40 @@
+import { buildHref, type SearchParams } from "@/lib/url-state"
+
+export interface Input {
+  idPrefix: string;
+  mobile?: boolean;
+  searchParams: SearchParams;
+}
+
+<div class="flex items-center justify-between gap-2">
+  <a
+    aria-label="Marko Books home"
+    class="inline-flex items-center gap-2 text-base font-semibold tracking-tight"
+    href=buildHref({ delay: input.searchParams.delay })
+  >
+    <book-mark class="text-action size-5"/>
+    Marko Books
+  </a>
+</div>
+<div class="border-divider dark:border-divider-dark mt-6 border-b pb-5">
+  <catalog-size/>
+</div>
+<div class="mt-5 mb-4">
+  <api-delay idPrefix=input.idPrefix searchParams=input.searchParams/>
+</div>
+<p class="text-muted mb-4 text-xs font-semibold tracking-wide uppercase">Filters</p>
+<book-filters idPrefix=input.idPrefix searchParams=input.searchParams/>
+<if=!input.mobile>
+  <div class="border-divider dark:border-divider-dark mt-4 flex items-center justify-between gap-2 border-t pt-4">
+    <theme-toggle variant="inline"/>
+    <a
+      aria-label="View source on GitHub"
+      class="text-muted rounded-full p-1.5 transition-colors hover:text-black dark:hover:text-white"
+      href="https://github.com/MaxwellCohen/marko-books"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <github-icon class="size-4"/>
+    </a>
+  </div>
+</if>

@@ -1,0 +1,5 @@
+import { buttonClasses } from "@/lib/ui"
+
+<error-state body=(input.error as Error | undefined)?.message title="Something went wrong">
+  <a class=buttonClasses({ class: "mt-1", size: "sm", variant: "secondary" }) href=$global.url.pathname>Try again</a>
+</error-state>

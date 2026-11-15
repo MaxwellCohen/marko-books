@@ -1,0 +1,18 @@
+import { stepClass } from "@/lib/ui"
+import { cn } from "@/lib/utils"
+
+<div aria-hidden="true" class="flex items-center justify-between gap-4">
+  <span class=cn(stepClass, "pointer-events-none opacity-40")>
+    <icon name="chevron-left" class="size-4"/>
+    Previous
+  </span>
+  <div class="flex items-center gap-2">
+    <skeleton class="skeleton-subtle hidden h-4 w-20 sm:block"/>
+    <span class="bg-divider dark:bg-divider-dark hidden h-3 w-px sm:block"/>
+    <skeleton class="skeleton-subtle h-4 w-20"/>
+  </div>
+  <span class=cn(stepClass, "pointer-events-none opacity-40")>
+    Next
+    <icon name="chevron-right" class="size-4"/>
+  </span>
+</div>

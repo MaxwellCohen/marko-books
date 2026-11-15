@@ -1,0 +1,22 @@
+import { PRIORITY_COVER_COUNT } from "@/features/book/book-constants"
+import type { BookSummary } from "@/features/book/book-types"
+import type { SearchParams } from "@/lib/url-state"
+
+export interface Input {
+  books: BookSummary[];
+  searchParams: SearchParams;
+}
+
+<if=(input.books.length > 0)>
+  <div class="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+    <for|book, index| of=input.books by="id">
+      <book-card book=book priority=(index < PRIORITY_COVER_COUNT) searchParams=input.searchParams/>
+    </for>
+  </div>
+</if>
+<else>
+  <empty-state
+    body="Nothing matched these filters. Try widening the year range or clearing the search."
+    title="No books found"
+  />
+</else>

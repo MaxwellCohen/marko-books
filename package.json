@@ -1,0 +1,37 @@
+{
+  "name": "marko-books",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "marko-run",
+    "build": "marko-run build",
+    "preview": "marko-run preview",
+    "start": "node --env-file-if-exists=.env --enable-source-maps ./dist/index.mjs",
+    "typecheck": "tsc --noEmit && mtc",
+    "deploy:vercel": "VERCEL=1 pnpm build && npx --yes vercel deploy --prebuilt --prod --yes",
+    "deploy:netlify": "NETLIFY=1 pnpm build && npx --yes netlify-cli deploy --prod --no-build",
+    "deploy:cloudflare": "CLOUDFLARE=1 pnpm build && wrangler deploy",
+    "preview:cloudflare": "CLOUDFLARE=1 pnpm build && wrangler dev"
+  },
+  "dependencies": {
+    "@marko/run": "^0.11.17",
+    "@marko/run-adapter-cloudflare": "^0.1.1",
+    "@marko/run-adapter-netlify": "^3.1.0",
+    "@marko/run-adapter-vercel": "^0.1.0",
+    "@neondatabase/serverless": "^1.2.1",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
+    "marko": "^6.4.15",
+    "tailwind-merge": "^3.7.0",
+    "thumbhash": "^0.1.1"
+  },
+  "devDependencies": {
+    "@marko/type-check": "^3.2.3",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "wrangler": "^4.162.0"
+  }
+}

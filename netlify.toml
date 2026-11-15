@@ -1,0 +1,7 @@
+[build]
+  command = "NETLIFY=1 pnpm build"
+  publish = "dist/public"
+  functions = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"

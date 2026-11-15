@@ -1,0 +1,102 @@
+import {
+  LANGUAGES, LISTS, MAX_PAGES, MAX_RATING, MAX_YEAR, MIN_PAGES, MIN_RATING, MIN_YEAR,
+  PAGE_FILTER_VALUES, RATING_FILTER_VALUES, YEAR_FILTER_VALUES,
+} from "@/features/book/book-constants"
+import { updateParams } from "@/lib/navigate"
+import { buttonClasses, labelClass } from "@/lib/ui"
+import { buildHref, type SearchParams } from "@/lib/url-state"
+
+export interface Input {
+  idPrefix: string;
+  searchParams: SearchParams;
+}
+
+<const/filters=input.searchParams>
+<const/activeCount=Object.entries(filters).filter(([key, value]) => key !== "page" && key !== "delay" && Boolean(value)).length>
+
+<div class="flex min-h-0 flex-1 flex-col">
+  <div class="min-h-0 flex-1 touch-pan-y [scrollbar-gutter:stable] overflow-x-hidden overflow-y-auto overscroll-contain px-1 pb-6">
+    <div class="flex flex-col gap-6">
+      <range-field
+        id=`${input.idPrefix}-filter-year`
+        label="Published before"
+        values=YEAR_FILTER_VALUES
+        value=Number(filters.year ?? MAX_YEAR)
+        readouts=YEAR_FILTER_VALUES.map((v) => (v === MAX_YEAR ? "Any year" : String(v)))
+        initialReadout=(filters.year ? filters.year : "Any year")
+        hint=[String(MIN_YEAR), String(MAX_YEAR)]
+        param="year"
+        clearValue=MAX_YEAR
+        searchParams=filters
+      />
+      <range-field
+        id=`${input.idPrefix}-filter-rating`
+        label="Minimum rating"
+        values=RATING_FILTER_VALUES
+        value=Number(filters.rating ?? MIN_RATING)
+        readouts=RATING_FILTER_VALUES.map((v) => (v > 0 ? `${v}+ stars` : "Any rating"))
+        initialReadout=(Number(filters.rating) > 0 ? `${filters.rating}+ stars` : "Any rating")
+        hint=["Any", `${MAX_RATING} stars`]
+        param="rating"
+        clearValue=MIN_RATING
+        searchParams=filters
+      />
+      <range-field
+        id=`${input.idPrefix}-filter-pages`
+        label="Max pages"
+        values=PAGE_FILTER_VALUES
+        value=Number(filters.pages ?? MAX_PAGES)
+        readouts=PAGE_FILTER_VALUES.map((v) => (v === MAX_PAGES ? "Any length" : `${v.toLocaleString("en-US")} pages`))
+        initialReadout=(filters.pages ? `${Number(filters.pages).toLocaleString("en-US")} pages` : "Any length")
+        hint=[String(MIN_PAGES), MAX_PAGES.toLocaleString("en-US")]
+        param="pages"
+        clearValue=MAX_PAGES
+        searchParams=filters
+      />
+
+      <div class="flex flex-col gap-2">
+        <label class=labelClass for=`${input.idPrefix}-filter-language`>Language</label>
+        <span class="relative block min-w-0">
+          <select
+            class="border-divider focus:border-accent focus:ring-accent/25 dark:border-divider-dark disabled:bg-card disabled:text-muted dark:disabled:bg-card-dark w-full appearance-none rounded-md border bg-white px-3 py-2 pr-8 text-sm text-black transition-colors focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#1c1c1c] dark:text-white"
+            id=`${input.idPrefix}-filter-language`
+            onChange(_, element) {
+              updateParams(filters, { language: element.value || undefined });
+            }
+          >
+            <for|language| of=LANGUAGES by="value">
+              <option value=language.value selected=(language.value === (filters.language ?? "en"))>${language.label}</option>
+            </for>
+          </select>
+          <icon name="chevron-down" class="text-muted pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2"/>
+        </span>
+      </div>
+
+      <fieldset class="flex flex-col gap-2">
+        <legend class="text-muted mb-2 text-xs font-semibold tracking-wide uppercase">Book lists</legend>
+        <for|list| of=LISTS by="slug">
+          <const/selected=(filters.list === list.slug)>
+          <label class="hover:bg-card dark:hover:bg-card-dark -mx-2 flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors">
+            <input
+              class="accent-action size-4 w-auto cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+              checked=selected
+              type="checkbox"
+              onChange() {
+                updateParams(filters, { list: selected ? undefined : list.slug });
+              }
+            />
+            ${list.name}
+          </label>
+        </for>
+      </fieldset>
+    </div>
+  </div>
+
+  <if=(activeCount > 0)>
+    <div class="border-divider dark:border-divider-dark border-t pt-3">
+      <a class=buttonClasses({ class: "w-full", variant: "secondary" }) href=buildHref(filters.delay ? { delay: filters.delay } : {})>
+        Clear all filters
+      </a>
+    </div>
+  </if>
+</div>

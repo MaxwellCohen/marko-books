@@ -1,0 +1,13 @@
+export interface Input {
+  icon: string;
+  label: string;
+  content?: Marko.Body;
+}
+
+<div class="flex items-start gap-3">
+  <span class="text-muted mt-0.5 shrink-0"><icon name=input.icon class="size-4"/></span>
+  <div class="min-w-0">
+    <dt class="text-muted text-xs font-semibold tracking-wide uppercase">${input.label}</dt>
+    <dd class="mt-0.5 truncate text-sm"><${input.content}/></dd>
+  </div>
+</div>

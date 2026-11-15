@@ -1,0 +1,15 @@
+import { buildHref, parseSearchParams } from "@/lib/url-state"
+
+<const/searchParams=parseSearchParams($global.search ?? {})>
+<const/book=$global.data.book>
+
+<div class="flex flex-1 flex-col px-4 py-5 sm:px-6">
+  <a
+    class="text-muted hover:bg-card dark:hover:bg-card-dark mb-6 -ml-1.5 inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors hover:text-black dark:hover:text-white"
+    href=buildHref(searchParams)
+  >
+    <icon name="arrow-left" class="size-4"/>
+    Back to books
+  </a>
+  <book-detail book=book/>
+</div>

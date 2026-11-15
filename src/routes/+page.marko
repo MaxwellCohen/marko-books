@@ -1,0 +1,31 @@
+import { parseSearchParams } from "@/lib/url-state"
+import { buttonClasses } from "@/lib/ui"
+
+<const/searchParams=parseSearchParams($global.search ?? {})>
+
+<div class="flex min-h-0 flex-1 flex-col">
+  <div class="flex-1 px-4 py-5 transition-opacity duration-200 ease-out group-has-[[data-filtering]]:opacity-60 sm:px-6">
+    <try>
+      <await|books|=$global.data.books>
+        <book-grid books=books searchParams=searchParams/>
+      </await>
+      <@placeholder><book-grid-skeleton/></@placeholder>
+      <@catch|err|>
+        <error-state body=err.message title="Can't load books">
+          <a class=buttonClasses({ class: "mt-1", size: "sm", variant: "secondary" }) href=$global.url.pathname + $global.url.search>Try again</a>
+        </error-state>
+      </@catch>
+    </try>
+  </div>
+  <footer class="border-divider dark:border-divider-dark mt-auto border-t px-4 py-3 sm:px-6">
+    <try>
+      <await|count|=$global.data.count>
+        <book-pagination searchParams=searchParams totalResults=count/>
+      </await>
+      <@placeholder><book-pagination-skeleton/></@placeholder>
+      <@catch>
+        <span class="text-muted text-xs">Pagination unavailable</span>
+      </@catch>
+    </try>
+  </footer>
+</div>

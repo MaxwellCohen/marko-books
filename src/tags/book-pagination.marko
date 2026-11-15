@@ -1,0 +1,48 @@
+import { buildHref, getCurrentPage, getTotalPages, withPage, type SearchParams } from "@/lib/url-state"
+import { stepClass } from "@/lib/ui"
+import { cn } from "@/lib/utils"
+
+export interface Input {
+  searchParams: SearchParams;
+  totalResults: number;
+}
+
+<const/totalPages=getTotalPages(input.totalResults)>
+<const/currentPage=getCurrentPage(input.searchParams, totalPages)>
+
+<nav aria-label="Pagination" class="flex items-center justify-between gap-4">
+  <if=(currentPage > 1)>
+    <a aria-label="Previous page" class=stepClass href=buildHref(withPage(input.searchParams, currentPage - 1))>
+      <icon name="chevron-left" class="size-4"/>
+      Previous
+    </a>
+  </if>
+  <else>
+    <span aria-disabled="true" class=cn(stepClass, "pointer-events-none opacity-40")>
+      <icon name="chevron-left" class="size-4"/>
+      Previous
+    </span>
+  </else>
+
+  <p class="text-muted flex items-center gap-2 text-xs tabular-nums sm:text-sm">
+    <span class="hidden sm:inline">
+      <span class="font-medium text-black dark:text-white">${input.totalResults.toLocaleString("en-US")}</span>
+      ${" "}books
+    </span>
+    <span aria-hidden="true" class="bg-divider dark:bg-divider-dark hidden h-3 w-px sm:block"/>
+    <span>Page ${currentPage.toLocaleString("en-US")} of ${totalPages.toLocaleString("en-US")}</span>
+  </p>
+
+  <if=(currentPage < totalPages)>
+    <a aria-label="Next page" class=stepClass href=buildHref(withPage(input.searchParams, currentPage + 1))>
+      Next
+      <icon name="chevron-right" class="size-4"/>
+    </a>
+  </if>
+  <else>
+    <span aria-disabled="true" class=cn(stepClass, "pointer-events-none opacity-40")>
+      Next
+      <icon name="chevron-right" class="size-4"/>
+    </span>
+  </else>
+</nav>

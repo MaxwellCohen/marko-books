@@ -29,3 +29,14 @@ Copy `.env.example` to `.env`:
 - The build picks the host adapter from the flag above; with no flag it targets Node.
 - `POSTGRES_URL` is set on every host (Vercel and Netlify environment variable, Cloudflare secret). Without it the app serves the preview catalog.
 - Manual deploys: `pnpm deploy:vercel`, `pnpm deploy:netlify`, `pnpm deploy:cloudflare`.
+
+### `optimized` branch
+
+| Host | URL |
+| --- | --- |
+| Vercel | https://marko-books-optimized.vercel.app |
+| Netlify | https://marko-books-max-optimized.netlify.app |
+| Cloudflare Workers | https://marko-books-optimized.to-email-max.workers.dev |
+
+- Self-hosted Geist and Geist Mono (`@fontsource-variable/*`) replace Google Fonts, so font files ship from the app's own origin.
+- Catalog queries are cached for 1 hour with in-flight de-dup (in-memory plus Vercel cache, Netlify Blobs or Workers KV `CATALOG_CACHE`, failing soft), and HTML/asset `Cache-Control` headers follow the main port's per-host policy.

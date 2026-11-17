@@ -14,11 +14,15 @@
     "preview:cloudflare": "CLOUDFLARE=1 pnpm build && wrangler dev"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
     "@marko/run": "^0.11.17",
     "@marko/run-adapter-cloudflare": "^0.1.1",
     "@marko/run-adapter-netlify": "^3.1.0",
     "@marko/run-adapter-vercel": "^0.1.0",
     "@neondatabase/serverless": "^1.2.1",
+    "@netlify/blobs": "^11.1.9",
+    "@vercel/functions": "^3.11.3",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.4",
     "marko": "^6.4.15",

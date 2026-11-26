@@ -1,0 +1,86 @@
+{
+  "framework": "marko",
+  "repo": "marko-books",
+  "commit": "150bf26419140798d7b18b1d7a42252ff99dca16",
+  "ranAt": "2026-11-26T04:55:46.555Z",
+  "results": {
+    "css-inlining": {
+      "claimedLabel": "manual",
+      "status": "pass",
+      "method": "Vite `?inline` CSS import written with <html-style>$!{css}</html-style> in the page",
+      "evidence": "inline <style> holds .ft-inline-marker-7c1f (applied: color rgb(1,2,3)); 1 stylesheet link(s) (/assets/_layout-duSW9uiL.css) don't contain it",
+      "test": "feature-tests/css-inlining.spec.ts"
+    },
+    "font-optimization": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "@fontsource-variable/geist @font-face (font-display: swap) + hand-added <link rel=preload as=font> via ?url import in the layout",
+      "evidence": "no Google Fonts requests; preload /assets/geist-latin-wght-normal-BgDaEnEv.woff2 (font/woff2, same origin) matches an @font-face with font-display: swap; Geist Variable loaded",
+      "test": "feature-tests/font-optimization.spec.ts"
+    },
+    "image-pipeline": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "vite-imagetools (?w=…&format=avif|webp&as=srcset) in <picture>, loading=lazy offscreen; needs a 10-line glue plugin flagging its modules `vite:asset` so @marko/vite emits them into the client build",
+      "evidence": "vite-imagetools srcset widths 400/800/1200w, width/height 800x500, lazy image fetched only after scroll, /assets/hero-SteUuMNx.avif→image/avif, /assets/hero-B71T8ESU.webp→image/webp",
+      "test": "feature-tests/image-pipeline.spec.ts"
+    },
+    "caching": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Run.GET handler returning Response with hand-set Cache-Control (max-age=3); browser HTTP cache reuse",
+      "evidence": "\"public, max-age=3, s-maxage=3\": 2nd fetch reused value 1795668925746 (server hits 1); after 3.5s fresh value, hits 2. Headers hand-set in Run.GET; no Marko data cache API",
+      "suggestedLabel": "manual",
+      "test": "feature-tests/caching.spec.ts"
+    },
+    "route-prefetching": {
+      "claimedLabel": "manual",
+      "status": "pass",
+      "method": "<html-script type=speculationrules> prefetch, eagerness moderate (hover)",
+      "evidence": "Speculation Rules (moderate) fetched /feature-tests/route-prefetching/target on hover, 165ms before click (Sec-Purpose: prefetch)",
+      "test": "feature-tests/route-prefetching.spec.ts"
+    },
+    "islands": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Marko 6 compiler: static tag + <let> counter tag, no config",
+      "evidence": "island counter updates after resume; FT_STATIC_ONLY_MARKER_93ad absent from 2 loaded scripts and all 20 client chunks in dist/public/assets",
+      "test": "feature-tests/islands.spec.ts"
+    },
+    "render-modes": {
+      "claimedLabel": "manual",
+      "status": "pass",
+      "method": "+meta.json {render} → +middleware Cache-Control; SSR default; client-only via mount <script>",
+      "evidence": "SSR timestamp changes per request (no-store); static route gets \"public, s-maxage=31536000\" via +meta.json+middleware (still SSR at origin, no prerendered file); client-only text absent from HTML, rendered after mount",
+      "test": "feature-tests/render-modes.spec.ts"
+    },
+    "reactivity": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Marko 6 <let>/<const> compiled reactivity",
+      "evidence": "3 clicks: mount effect ran 1x, dependent <const> evaluated 3x, unrelated <const> 0x on client; DOM mutations only in #count/#doubled",
+      "test": "feature-tests/reactivity.spec.ts"
+    },
+    "bundle-analysis": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "rollup-plugin-visualizer added to vite.config.ts when ANALYZE=1",
+      "evidence": "rollup-plugin-visualizer wrote .ft-out/analyze/public/stats.html, .ft-out/analyze/stats.html",
+      "test": "feature-tests/bundle-analysis.spec.ts"
+    },
+    "third-party-scripts": {
+      "claimedLabel": "manual",
+      "status": "pass",
+      "method": "<html-script async src> in <head> + mount <script> injecting a script at requestIdleCallback",
+      "evidence": "<script async> in head + idle-injected script, both held 2000ms: DOMContentLoaded/first render at 373ms; globals set later (async readyState=interactive, idle readyState=interactive)",
+      "test": "feature-tests/third-party-scripts.spec.ts"
+    },
+    "multi-host-deployment": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "@marko/run adapter (node) + @marko/run-adapter-netlify/-vercel/-cloudflare chosen by env flag",
+      "evidence": "built 4 targets: node (.ft-out/node/index.mjs http server), netlify (function index.mjs + public), vercel (.vercel/output/{config.json,functions/index.func,static}), cloudflare (ssr/wrangler.json + client/)",
+      "test": "feature-tests/multi-host-deployment.spec.ts"
+    }
+  }
+}

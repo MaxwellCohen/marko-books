@@ -1,0 +1,7 @@
+<let/rendered=null as string | null>
+<script>
+  // Runs only in the browser after mount: client-only content.
+  rendered = `client-rendered at ${Date.now()}`;
+</script>
+<h1 class="text-2xl font-semibold">Render mode: client-only</h1>
+<p id="client-out">${rendered ?? "…"}</p>

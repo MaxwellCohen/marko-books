@@ -1,0 +1,19 @@
+// Third-party: vite-imagetools resizes/converts at build time (no first-party image pipeline in Marko).
+import avifSrcset from "@/features/feature-tests/hero.jpg?w=400;800;1200&format=avif&as=srcset"
+import webpSrcset from "@/features/feature-tests/hero.jpg?w=400;800;1200&format=webp&as=srcset"
+// The offscreen image uses its own widths so the test can see exactly when it is requested.
+import lazyAvif from "@/features/feature-tests/hero.jpg?w=300;600;900&format=avif&as=srcset"
+import lazyWebp from "@/features/feature-tests/hero.jpg?w=300;600;900&format=webp&as=srcset"
+import lazyFallback from "@/features/feature-tests/hero.jpg?w=600&format=webp&as=metadata"
+import fallback from "@/features/feature-tests/hero.jpg?w=800&format=webp&as=metadata"
+
+<h1 class="text-2xl font-semibold">Image pipeline</h1>
+<picture>
+  <source type="image/avif" srcset=avifSrcset sizes="(max-width: 800px) 100vw, 800px">
+  <img id="hero" src=fallback.src srcset=webpSrcset sizes="(max-width: 800px) 100vw, 800px" width=fallback.width height=fallback.height alt="Gradient hero" fetchpriority="high" class="h-auto w-full">
+</picture>
+<div style="height: 3000px">Spacer so the next image is offscreen.</div>
+<picture>
+  <source type="image/avif" srcset=lazyAvif sizes="(max-width: 800px) 100vw, 800px">
+  <img id="offscreen" src=lazyFallback.src srcset=lazyWebp sizes="(max-width: 800px) 100vw, 800px" width=lazyFallback.width height=lazyFallback.height alt="Offscreen gradient" loading="lazy" decoding="async" class="h-auto w-full">
+</picture>

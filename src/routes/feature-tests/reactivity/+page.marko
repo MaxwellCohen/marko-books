@@ -1,0 +1,15 @@
+import { trackBound, trackMount, trackStatic } from "@/features/feature-tests/reactivity-probe"
+
+<let/count=0>
+<const/doubled=trackBound(count)>
+<const/label=trackStatic()>
+<script>
+  // No reactive reads: runs once on mount. A whole-template re-run would not re-run this
+  // in Marko either, so the test also watches DOM mutations and expression evaluation counts.
+  trackMount();
+</script>
+
+<h1 class="text-2xl font-semibold">Reactivity</h1>
+<p id="label">${label}</p>
+<p>count: <span id="count">${count}</span>, doubled: <span id="doubled">${doubled}</span></p>
+<button id="inc" class="rounded border px-3 py-1" type="button" onClick() { count++ }>+1</button>

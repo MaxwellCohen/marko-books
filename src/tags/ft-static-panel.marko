@@ -1,0 +1,8 @@
+// Static (no state, no handlers): Marko should ship none of this to the client.
+static function describe() {
+  return "FT_STATIC_ONLY_MARKER_93ad server-rendered panel";
+}
+
+<section id="static-panel" class="rounded border p-3">
+  <p>${describe()}</p>
+</section>

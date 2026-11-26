@@ -1,0 +1,6 @@
+// Manual CSS inlining: Vite ?inline gives the CSS as a string; <html-style> writes a literal <style>.
+import css from "./ft-css-inlining.css?inline"
+
+<html-style>$!{css}</html-style>
+<h1 class="text-2xl font-semibold">CSS inlining</h1>
+<p class="ft-inline-marker-7c1f">Styled only by an inline &lt;style&gt; (no stylesheet link for this CSS).</p>

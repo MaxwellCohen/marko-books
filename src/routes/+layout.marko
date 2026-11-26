@@ -1,5 +1,6 @@
 import "../styles.css"
 import { parseSearchParams } from "@/lib/url-state"
+import geistLatinUrl from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url"
 
 static const DESCRIPTION =
   "Browse two million Goodreads books with Marko Run, streaming search, and URL-driven filters.";
@@ -8,6 +9,9 @@ static const DESCRIPTION =
 static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||((t==="system"||!t)&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
 
 <const/searchParams=parseSearchParams($global.search ?? {})>
+// /feature-tests/* pages get a bare shell; +meta.json flags opt a route into head extras.
+<const/isFeatureTest=(($global.url as URL | undefined)?.pathname.startsWith("/feature-tests") ?? false)>
+<const/ftMeta=(($global.meta ?? {}) as { fontPreload?: boolean; speculation?: boolean; thirdParty?: boolean })>
 <const/title=(($global.data as { pageTitle?: string } | undefined)?.pageTitle ?? "Marko Books")>
 
 <!doctype html>
@@ -25,7 +29,28 @@ static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme")
     <meta property="og:type" content="website">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <html-script>$!{THEME_SCRIPT}</html-script>
+    <if=ftMeta.fontPreload>
+      // Fontsource ships the @font-face (font-display: swap); the preload is added by hand.
+      <link rel="preload" as="font" type="font/woff2" href=geistLatinUrl crossorigin="anonymous">
+    </if>
+    <if=ftMeta.speculation>
+      <html-script type="speculationrules">
+        {"prefetch":[{"where":{"and":[{"href_matches":"/feature-tests/*"},{"not":{"selector_matches":"[rel~=nofollow]"}}]},"eagerness":"moderate"}]}
+      </html-script>
+    </if>
+    <if=ftMeta.thirdParty>
+      // Literal async tag: downloads in parallel, never blocks parsing.
+      <html-script async src="/feature-tests/third-party-async.js"></html-script>
+    </if>
   </head>
+  <if=isFeatureTest>
+    <body class="bg-surface text-black antialiased dark:bg-surface-dark dark:text-white">
+      <main class="mx-auto max-w-3xl p-6">
+        <${input.content}/>
+      </main>
+    </body>
+  </if>
+  <else>
   <body class="bg-surface text-black antialiased dark:bg-surface-dark dark:text-white">
     <div class="group flex min-h-dvh">
       <aside class="border-divider bg-surface dark:border-divider-dark dark:bg-surface-dark sticky top-0 hidden h-dvh w-72 shrink-0 flex-col border-r px-5 py-5 md:flex">
@@ -46,4 +71,5 @@ static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme")
       </div>
     </div>
   </body>
+  </else>
 </html>

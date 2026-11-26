@@ -1,0 +1,6 @@
+<h1 class="text-2xl font-semibold">Render modes</h1>
+<p>SSR per request (no +meta render flag → private, no-store): <span id="ts">${Date.now()}</span></p>
+<ul class="list-disc pl-6">
+  <li><a href="/feature-tests/render-modes/static">static</a> (+meta.json render: static → s-maxage=31536000)</li>
+  <li><a href="/feature-tests/render-modes/client">client-only</a> (rendered in a mount &lt;script&gt;)</li>
+</ul>

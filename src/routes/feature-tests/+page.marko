@@ -1,0 +1,20 @@
+static const FEATURES = [
+  ["css-inlining", "Manual: Vite ?inline + <html-style>"],
+  ["font-optimization", "Third-party: Fontsource + hand-added preload"],
+  ["image-pipeline", "Third-party: vite-imagetools (AVIF/WebP srcset)"],
+  ["caching", "HTTP Cache-Control set in a Marko Run handler"],
+  ["route-prefetching", "Manual: Speculation Rules"],
+  ["islands", "1st-party: Marko 6 fine-grained bundling / resumability"],
+  ["render-modes", "Manual: +meta.json mode -> middleware Cache-Control; client-only via <script>"],
+  ["reactivity", "1st-party: compiled <let>/<const>"],
+  ["bundle-analysis", "Third-party: rollup-plugin-visualizer"],
+  ["third-party-scripts", "Manual: <html-script async> + idle loader"],
+  ["multi-host-deployment", "1st-party adapters: node, netlify, vercel, cloudflare"],
+];
+
+<h1 class="mb-4 text-2xl font-semibold">Feature tests</h1>
+<ul class="list-disc pl-6">
+  <for|[id, how]| of=FEATURES>
+    <li><a class="text-primary underline" href=`/feature-tests/${id}`>${id}</a> — ${how}</li>
+  </for>
+</ul>

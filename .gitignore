@@ -12,3 +12,8 @@ Thumbs.db
 .netlify
 .wrangler
 .dev.vars
+
+# feature tests
+.ft-out
+feature-tests/.reports
+test-results

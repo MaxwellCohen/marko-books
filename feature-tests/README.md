@@ -12,7 +12,7 @@ Playwright (system Chrome at `/home/maxc/.local/bin/google-chrome`, override wit
 stops the server and writes `feature-tests/results.json`.
 
 Routes live under `src/routes/feature-tests/` (index at `/feature-tests`). The root layout gives
-`/feature-tests/*` a bare shell and reads `+meta.json` flags (`fontPreload`, `speculation`,
+`/feature-tests/*` a bare shell and reads `+meta.json` flags (`speculation`,
 `thirdParty`) for head extras; book pages are unchanged.
 
 | Feature | Label | What the spec proves |

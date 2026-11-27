@@ -11,7 +11,7 @@ static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme")
 <const/searchParams=parseSearchParams($global.search ?? {})>
 // /feature-tests/* pages get a bare shell; +meta.json flags opt a route into head extras.
 <const/isFeatureTest=(($global.url as URL | undefined)?.pathname.startsWith("/feature-tests") ?? false)>
-<const/ftMeta=(($global.meta ?? {}) as { fontPreload?: boolean; speculation?: boolean; thirdParty?: boolean })>
+<const/ftMeta=(($global.meta ?? {}) as { speculation?: boolean; thirdParty?: boolean })>
 <const/title=(($global.data as { pageTitle?: string } | undefined)?.pageTitle ?? "Marko Books")>
 
 <!doctype html>
@@ -29,10 +29,9 @@ static const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme")
     <meta property="og:type" content="website">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <html-script>$!{THEME_SCRIPT}</html-script>
-    <if=ftMeta.fontPreload>
-      // Fontsource ships the @font-face (font-display: swap); the preload is added by hand.
-      <link rel="preload" as="font" type="font/woff2" href=geistLatinUrl crossorigin="anonymous">
-    </if>
+    // Fontsource ships the @font-face (font-display: swap) but no preload, and Marko has no
+    // font API, so the Latin Geist file is preloaded by hand on every page.
+    <link rel="preload" as="font" type="font/woff2" href=geistLatinUrl crossorigin="anonymous">
     <if=ftMeta.speculation>
       <html-script type="speculationrules">
         {"prefetch":[{"where":{"and":[{"href_matches":"/feature-tests/*"},{"not":{"selector_matches":"[rel~=nofollow]"}}]},"eagerness":"moderate"}]}

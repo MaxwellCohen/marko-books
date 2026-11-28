@@ -1,8 +1,3 @@
-type CatalogKv = {
-	get(key: string, type: 'json'): Promise<unknown>;
-	put(key: string, value: string, options?: { expirationTtl: number }): Promise<void>;
-};
-
 /** Matches Next `cacheLife('hours')`: revalidate 1h, expire 24h. */
 export const CATALOG_CACHE_REVALIDATE_SECONDS = 3600;
 export const CATALOG_CACHE_EXPIRE_SECONDS = 86400;
@@ -45,25 +40,6 @@ function memorySet<T>(key: string, value: T) {
 	memory.set(key, { expiresAt: Date.now() + TTL_MS, value });
 }
 
-let catalogKv: CatalogKv | undefined;
-let kvResolved = false;
-
-/** Workers KV binding `CATALOG_CACHE` (Cloudflare only). */
-async function resolveKv(): Promise<CatalogKv | undefined> {
-	if (kvResolved) return catalogKv;
-	kvResolved = true;
-	try {
-		// @ts-expect-error resolved only on Workers
-		const mod = (await import(/* @vite-ignore */ 'cloudflare:workers')) as {
-			env?: { CATALOG_CACHE?: CatalogKv };
-		};
-		catalogKv = mod.env?.CATALOG_CACHE;
-	} catch {
-		// Not running on Workers.
-	}
-	return catalogKv;
-}
-
 function edgeRequest(key: string) {
 	// Cache API keys must be https URLs. `.local` hosts are rejected.
 	return new Request(`https://example.com/books-catalog-cache/v1/${encodeURIComponent(key)}`);
@@ -71,6 +47,7 @@ function edgeRequest(key: string) {
 
 type WorkersCacheStorage = CacheStorage & { default?: Cache };
 
+/** Cloudflare Cache API (`caches.default`): free, unlike Workers KV writes. */
 function edgeCache(): Cache | undefined {
 	const cachesApi = (globalThis as typeof globalThis & { caches?: WorkersCacheStorage }).caches;
 	return cachesApi?.default;
@@ -85,16 +62,6 @@ function envFlag(name: string) {
 }
 
 async function platformGet<T>(key: string): Promise<T | undefined> {
-	try {
-		if (await resolveKv()) {
-			const value = await catalogKv!.get(key, 'json');
-			if (value != null) return value as T;
-			return;
-		}
-	} catch {
-		// KV optional / not bound.
-	}
-
 	try {
 		if (isVercel()) {
 			const { getCache } = await import('@vercel/functions');
@@ -129,17 +96,6 @@ async function platformGet<T>(key: string): Promise<T | undefined> {
 }
 
 async function platformSet<T>(key: string, value: T): Promise<void> {
-	try {
-		if (await resolveKv()) {
-			await catalogKv!.put(key, JSON.stringify(value), {
-				expirationTtl: CATALOG_CACHE_REVALIDATE_SECONDS
-			});
-			return;
-		}
-	} catch {
-		// KV optional / not bound.
-	}
-
 	try {
 		if (isVercel()) {
 			const { getCache } = await import('@vercel/functions');
